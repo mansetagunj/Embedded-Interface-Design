@@ -5,7 +5,9 @@ import time
 #sys.path.append("/home/pi/gunjproject/AdafruitLib/Adafruit_Python_DHT") 
 import Adafruit_DHT
 from PyQt5.QtWidgets import QApplication, QDialog
+from PyQt5 import QtCore
 from DHT_UI import Ui_Dialog
+from threading import Timer
 
 class DHTUser():
     _pin = None
@@ -28,46 +30,76 @@ class AppWindow(QDialog):
         self.ui.requestDataButton.clicked.connect(self.updateTempHumUI)
         self.ui.CtempButton.clicked.connect(self.setTempCelcius)
         self.ui.FtempButton.clicked.connect(self.setTempFahrenheit)
+        self.ui.timerResolutionSpinBox.valueChanged.connect(self.updateTimerEvent)
+        self.ui.startTimerButton.clicked.connect(self.startTimerEvent)
+        self.ui.stopTimerButton.clicked.connect(self.stopTimerEvent)
+        self.ui.stopTimerButton.setEnabled(False)
         self.ui.CtempButton.setEnabled(False)
+        self.readingsTimer = QtCore.QTimer()
+        self.readingsTimer.timeout.connect(self.timerTickEvent)
+        self.now = 0
         
-    def setTempCelcius():
+    def startTimerEvent(self):
+        print ("Start Timer")
+        self.ui.stopTimerButton.setEnabled(True)
+        self.ui.startTimerButton.setEnabled(False)
+        self.ui.requestDataButton.setEnabled(False)
+        print ("Timer value:" + str(self.ui.timerResolutionSpinBox.value()))
+        #self.readingsTimer = Timer(self.ui.timerResolutionSpinBox.value(), self.updateTempHumUI)
+        self.now = 0
+        self.readingsTimer.start(self.ui.timerResolutionSpinBox.value()*1000)
+    
+    def timerTickEvent(self):
+        self.now += 1
+        self.updateTempHumUI()
+        
+    def stopTimerEvent(self):
+        print ("Stop Timer")
+        self.readingsTimer.stop()
+        self.ui.stopTimerButton.setEnabled(False)
+        self.ui.startTimerButton.setEnabled(True)
+        self.ui.requestDataButton.setEnabled(True)
+        
+    def updateTimerEvent(self):
+        self.readingsTimer.stop()
+        self.now = 0
+        print ("Updated Timer value:" + str(self.ui.timerResolutionSpinBox.value()))
+        self.readingsTimer.start(self.ui.timerResolutionSpinBox.value()*1000)
+        
+    def setTempCelcius(self):
         if (self.tempUnit == 1):  #if in Fah state
             self.tempUnit = 0   ##changing back to Celcius state
-            #updateSensorReadingsUIElement(humidity, convertTemp(self.ui.temperatureLCD.value(), False))
+            self.updateSensorReadingsUIElement(self.ui.humidityLCD.value(), self.convertTemp(self.ui.temperatureLCD.value(), True))
             self.ui.FtempButton.setEnabled(True)
             self.ui.CtempButton.setEnabled(False)
 
-    def setTempFahrenheit():
-        if (self.tempUnit == 0):  #if in C state
-            print ("In click Fah, tempunit to 1")
+    def setTempFahrenheit(self):
+        if self.tempUnit == 0:  #if in C state
             self.tempUnit = 1   ##changing back to Fah state
-            #updateSensorReadingsUIElement(humidity, convertTemp(self.ui.temperatureLCD.value(), True))
+            self.updateSensorReadingsUIElement(self.ui.humidityLCD.value(), self.ui.temperatureLCD.value())
             self.ui.FtempButton.setEnabled(False)
             self.ui.CtempButton.setEnabled(True)
 
-    def convertTemp(tempVal, toCelcius):
-        if(toCelcius):
+    def convertTemp(self, tempVal, toCelcius):
+        if toCelcius == True:
             return ((tempVal - 32)*(5/9))
         else:
             return ((tempVal * (9/5)) + 32)
         
-    def updateSensorReadingsUIElement(humidity, temperature):
-        if(self.tempUnit == 1):  ## we need temp values in F
-            temperature = convertTemp(tempVal, False)   
+    def updateSensorReadingsUIElement(self, humidity, temperature):
+        if self.tempUnit == 1:  ## we need temp values in F
+            temperature = self.convertTemp(temperature, False)   
         self.ui.temperatureLCD.display("{:.1f}".format(temperature))   
         self.ui.humidityLCD.display("{:.1f}".format(humidity))
         
     
     def updateTempHumUI(self):
+        print ("Request Data")
         humidity, temperature = self.dht.read()
         if humidity is not None and temperature is not None:
             self.ui.sensorStatus.setText("Sensor Connected");
             self.ui.sensorStatus.setStyleSheet("QLabel { background-color : green; color : white; }");
-            #updateUISensorReadings(humidity, temperature)
-            if(self.tempUnit == 1):  ## we need temp values in F
-                temperature = convertTemp(tempVal, False)   
-            self.ui.temperatureLCD.display("{:.1f}".format(temperature))   
-            self.ui.humidityLCD.display("{:.1f}".format(humidity))
+            self.updateSensorReadingsUIElement(humidity, temperature)
             self.ui.lastRequestTime.setText(str(time.asctime(time.localtime(time.time()))))
         else:
             self.ui.sensorStatus.setText("Sensor Disconnected");
