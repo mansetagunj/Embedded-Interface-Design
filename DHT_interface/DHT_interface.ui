@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>50</x>
-     <y>120</y>
+     <y>110</y>
      <width>181</width>
      <height>111</height>
     </rect>
@@ -26,8 +26,8 @@
   <widget class="QLCDNumber" name="humidityLCD">
    <property name="geometry">
     <rect>
-     <x>530</x>
-     <y>120</y>
+     <x>560</x>
+     <y>110</y>
      <width>181</width>
      <height>111</height>
     </rect>
@@ -36,24 +36,38 @@
   <widget class="QPushButton" name="requestDataButton">
    <property name="geometry">
     <rect>
-     <x>300</x>
+     <x>290</x>
      <y>230</y>
-     <width>151</width>
-     <height>81</height>
+     <width>191</width>
+     <height>171</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>22</pointsize>
+    </font>
    </property>
    <property name="text">
     <string>Request Data</string>
    </property>
   </widget>
   <widget class="QLabel" name="lastRequestTime">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="geometry">
     <rect>
-     <x>260</x>
-     <y>110</y>
+     <x>270</x>
+     <y>160</y>
      <width>251</width>
-     <height>91</height>
+     <height>41</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
    </property>
    <property name="toolTip">
     <string extracomment="Latest request data timestamp"/>
@@ -65,7 +79,7 @@
     <bool>false</bool>
    </property>
    <property name="frameShape">
-    <enum>QFrame::Box</enum>
+    <enum>QFrame::StyledPanel</enum>
    </property>
    <property name="frameShadow">
     <enum>QFrame::Plain</enum>
@@ -76,55 +90,203 @@
    <property name="text">
     <string>Last Request Time</string>
    </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
    <property name="indent">
     <number>-1</number>
    </property>
   </widget>
-  <widget class="QLabel" name="label_2">
+  <widget class="QLabel" name="temperatureIconLabel">
    <property name="geometry">
     <rect>
-     <x>100</x>
-     <y>240</y>
-     <width>101</width>
-     <height>31</height>
+     <x>80</x>
+     <y>220</y>
+     <width>141</width>
+     <height>151</height>
     </rect>
    </property>
    <property name="text">
-    <string>Temperature</string>
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap>Resources/temp1.png</pixmap>
    </property>
   </widget>
-  <widget class="QLabel" name="label_3">
+  <widget class="QLabel" name="humidityIconLabel">
    <property name="geometry">
     <rect>
      <x>590</x>
-     <y>240</y>
-     <width>91</width>
-     <height>31</height>
+     <y>220</y>
+     <width>141</width>
+     <height>151</height>
     </rect>
    </property>
    <property name="text">
-    <string>Humidity</string>
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap>Resources/hum.png</pixmap>
    </property>
   </widget>
-  <widget class="QCheckBox" name="sensorConnected">
+  <widget class="Line" name="line">
    <property name="geometry">
     <rect>
-     <x>310</x>
-     <y>30</y>
-     <width>191</width>
-     <height>51</height>
+     <x>240</x>
+     <y>20</y>
+     <width>20</width>
+     <height>571</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Vertical</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_2">
+   <property name="geometry">
+    <rect>
+     <x>530</x>
+     <y>20</y>
+     <width>20</width>
+     <height>571</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Vertical</enum>
+   </property>
+  </widget>
+  <widget class="QLabel" name="sensorStatus">
+   <property name="geometry">
+    <rect>
+     <x>320</x>
+     <y>80</y>
+     <width>161</width>
+     <height>41</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>16</pointsize>
      <weight>75</weight>
-     <italic>true</italic>
      <bold>true</bold>
     </font>
    </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel { background-color : red; color : white; }</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
    <property name="text">
-    <string>Sensor Connected</string>
+    <string>Sensor Disconnected</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="stopTimerButton">
+   <property name="geometry">
+    <rect>
+     <x>410</x>
+     <y>520</y>
+     <width>101</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Stop Timer</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="startTimerButton">
+   <property name="geometry">
+    <rect>
+     <x>280</x>
+     <y>520</y>
+     <width>101</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Start Timer</string>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="timerResolutionSpinBox">
+   <property name="geometry">
+    <rect>
+     <x>400</x>
+     <y>450</y>
+     <width>91</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="minimum">
+    <number>1</number>
+   </property>
+   <property name="maximum">
+    <number>10</number>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>270</x>
+     <y>460</y>
+     <width>131</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Timer Resolution</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="CtempButton">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>50</y>
+     <width>51</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normalon>../../../Downloads/celsius.png</normalon>
+    </iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>100</width>
+     <height>100</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="FtempButton">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>50</y>
+     <width>51</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normalon>Resources/farh.png</normalon>
+    </iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>100</width>
+     <height>100</height>
+    </size>
    </property>
   </widget>
  </widget>
