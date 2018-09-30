@@ -1,4 +1,5 @@
 # GUI for DHT22 sensor using pyQt5 and matplotlib.
+## Python3, Adafruit DHT22 library, RaspberryPi, Multi-threaded
 
 # User Interface
 ![UI](https://github.com/mansetagunj/Embedded-Interface-Design/blob/master/DHT_interface/Snaps/UI.JPG)
