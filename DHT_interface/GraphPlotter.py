@@ -69,7 +69,7 @@ class RealTimePlotter:
         ax = fig.add_subplot(211)
         staticplot.grid(True)
         ax.yaxis.set_major_formatter(ticker.FormatStrFormatter('%0.1f'))
-        ax.set_title('Sensor Real data')
+        ax.set_title('Stored Sensor data')
         ax.set_xlabel('Samples')
         ax.set_ylabel('Humidity')
         ax.set_ylim(min(hum_data)-0.2,max(hum_data)+0.2,auto=True)
