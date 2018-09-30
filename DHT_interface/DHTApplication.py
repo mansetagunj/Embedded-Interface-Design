@@ -72,7 +72,7 @@ class AppWindow(QDialog):
         self.ui.stopTimerButton.setEnabled(True)
         self.ui.startTimerButton.setEnabled(False)
         self.ui.requestDataButton.setEnabled(False)
-        print ("Timer value:" + str(self.ui.timerResolutionSpinBox.value()))
+        #print ("Timer value:" + str(self.ui.timerResolutionSpinBox.value()))
         self.now = 0
         if self.ui.realtimeGraphTimerCheckbox.isChecked() is True:
             self.realTimePlotter.startPlotter()
@@ -158,7 +158,7 @@ class AppWindow(QDialog):
             self.ui.tempThresholdAlarm.setStyleSheet("QLabel { background-color : none; color : white; }");
 
     def updateTempHumUI(self):
-        print ("Request Data")
+        #print ("Request Data")
         humidity, temperature = self.dht.read()
         if humidity is not None and temperature is not None:
             self.tempList.append(temperature)

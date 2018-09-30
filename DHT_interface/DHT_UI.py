@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(796, 789)
+        Dialog.resize(799, 820)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("Resources/temp.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Dialog.setWindowIcon(icon)
@@ -267,6 +267,9 @@ class Ui_Dialog(object):
         font.setWeight(75)
         self.clearReadingsButton.setFont(font)
         self.clearReadingsButton.setObjectName("clearReadingsButton")
+        self.label_4 = QtWidgets.QLabel(Dialog)
+        self.label_4.setGeometry(QtCore.QRect(520, 790, 271, 21))
+        self.label_4.setObjectName("label_4")
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -291,4 +294,5 @@ class Ui_Dialog(object):
         self.todaysDateLabel.setText(_translate("Dialog", "Todays Date"))
         self.staticGraphButton.setText(_translate("Dialog", "Stored Readings Graph"))
         self.clearReadingsButton.setText(_translate("Dialog", "Clear Readings"))
+        self.label_4.setText(_translate("Dialog", "Designed & Developed - Gunj Manseta"))
 

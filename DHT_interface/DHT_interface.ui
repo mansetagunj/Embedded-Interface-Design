@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>796</width>
-    <height>789</height>
+    <width>799</width>
+    <height>820</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -697,6 +697,19 @@
    </property>
    <property name="text">
     <string>Clear Readings</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>520</x>
+     <y>790</y>
+     <width>271</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Designed &amp; Developed - Gunj Manseta</string>
    </property>
   </widget>
  </widget>

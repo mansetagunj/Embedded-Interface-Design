@@ -71,7 +71,7 @@ class RealTimePlotter:
         ax.yaxis.set_major_formatter(ticker.FormatStrFormatter('%0.1f'))
         ax.set_title('Stored Sensor data')
         ax.set_xlabel('Samples')
-        ax.set_ylabel('Humidity')
+        ax.set_ylabel('Humidity%')
         ax.set_ylim(min(hum_data)-0.2,max(hum_data)+0.2,auto=True)
         
         
@@ -101,7 +101,7 @@ class RealTimePlotter:
         self.ax.set_title('Sensor Real time data')
         self.ax.yaxis.set_major_formatter(ticker.FormatStrFormatter('%0.1f'))
         self.ax.set_xlabel('Samples')
-        self.ax.set_ylabel('Humidity')
+        self.ax.set_ylabel('Humidity%')
         
         self.bx = self.fig.add_subplot(212)
         self.plt.grid(True)
@@ -123,7 +123,7 @@ class RealTimePlotter:
         avg_temp = []
         avg_hum = []
 
-        print("Real Time Temperature Plotter")
+        #print("Real Time Temperature Plotter")
             
         while self.plotterRun is True:
     
