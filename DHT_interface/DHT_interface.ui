@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>813</width>
-    <height>825</height>
+    <width>796</width>
+    <height>789</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -161,7 +161,7 @@
      <x>240</x>
      <y>20</y>
      <width>20</width>
-     <height>791</height>
+     <height>651</height>
     </rect>
    </property>
    <property name="orientation">
@@ -174,7 +174,7 @@
      <x>530</x>
      <y>20</y>
      <width>20</width>
-     <height>781</height>
+     <height>651</height>
     </rect>
    </property>
    <property name="orientation">
@@ -217,7 +217,7 @@
    <property name="geometry">
     <rect>
      <x>410</x>
-     <y>710</y>
+     <y>590</y>
      <width>101</width>
      <height>61</height>
     </rect>
@@ -237,7 +237,7 @@
    <property name="geometry">
     <rect>
      <x>280</x>
-     <y>710</y>
+     <y>590</y>
      <width>101</width>
      <height>61</height>
     </rect>
@@ -257,7 +257,7 @@
    <property name="geometry">
     <rect>
      <x>420</x>
-     <y>650</y>
+     <y>530</y>
      <width>91</width>
      <height>41</height>
     </rect>
@@ -273,7 +273,7 @@
    <property name="geometry">
     <rect>
      <x>260</x>
-     <y>650</y>
+     <y>530</y>
      <width>151</width>
      <height>31</height>
     </rect>
@@ -371,8 +371,11 @@
    <property name="singleStep">
     <number>1</number>
    </property>
+   <property name="value">
+    <number>20</number>
+   </property>
    <property name="sliderPosition">
-    <number>40</number>
+    <number>20</number>
    </property>
    <property name="orientation">
     <enum>Qt::Horizontal</enum>
@@ -431,7 +434,7 @@
     </font>
    </property>
    <property name="text">
-    <string>50</string>
+    <string>20</string>
    </property>
   </widget>
   <widget class="QLabel" name="tempUnitThresholdDisplayLabel">
@@ -471,7 +474,7 @@
     </font>
    </property>
    <property name="text">
-    <string>50</string>
+    <string>40</string>
    </property>
   </widget>
   <widget class="QLabel" name="hmuUnitThresholdDisplayLabel">
@@ -535,8 +538,8 @@
   <widget class="QLabel" name="tempThresholdAlarm">
    <property name="geometry">
     <rect>
-     <x>70</x>
-     <y>460</y>
+     <x>80</x>
+     <y>480</y>
      <width>91</width>
      <height>101</height>
     </rect>
@@ -557,8 +560,8 @@
   <widget class="QLabel" name="humThresholdAlarm">
    <property name="geometry">
     <rect>
-     <x>620</x>
-     <y>460</y>
+     <x>630</x>
+     <y>470</y>
      <width>91</width>
      <height>101</height>
     </rect>
@@ -580,7 +583,7 @@
    <property name="geometry">
     <rect>
      <x>300</x>
-     <y>580</y>
+     <y>460</y>
      <width>201</width>
      <height>51</height>
     </rect>
@@ -600,7 +603,7 @@
    <property name="geometry">
     <rect>
      <x>260</x>
-     <y>530</y>
+     <y>440</y>
      <width>271</width>
      <height>31</height>
     </rect>
@@ -609,7 +612,7 @@
     <enum>Qt::Horizontal</enum>
    </property>
   </widget>
-  <widget class="QLabel" name="label_4">
+  <widget class="QLabel" name="todaysDateLabel">
    <property name="geometry">
     <rect>
      <x>280</x>
@@ -620,7 +623,7 @@
    </property>
    <property name="font">
     <font>
-     <pointsize>16</pointsize>
+     <pointsize>18</pointsize>
      <weight>75</weight>
      <bold>true</bold>
     </font>
@@ -632,23 +635,24 @@
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QPushButton" name="humidityGraphButton">
+  <widget class="QPushButton" name="staticGraphButton">
    <property name="geometry">
     <rect>
-     <x>570</x>
-     <y>620</y>
-     <width>201</width>
-     <height>111</height>
+     <x>10</x>
+     <y>680</y>
+     <width>621</width>
+     <height>101</height>
     </rect>
    </property>
    <property name="font">
     <font>
+     <pointsize>26</pointsize>
      <weight>75</weight>
      <bold>true</bold>
     </font>
    </property>
    <property name="text">
-    <string>Humidity</string>
+    <string>Stored Readings Graph</string>
    </property>
    <property name="icon">
     <iconset>
@@ -657,39 +661,42 @@
    </property>
    <property name="iconSize">
     <size>
-     <width>100</width>
-     <height>100</height>
+     <width>150</width>
+     <height>150</height>
     </size>
    </property>
   </widget>
-  <widget class="QPushButton" name="temperatureGraphButton">
+  <widget class="Line" name="line_4">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>620</y>
-     <width>211</width>
-     <height>111</height>
+     <x>260</x>
+     <y>660</y>
+     <width>271</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="clearReadingsButton">
+   <property name="geometry">
+    <rect>
+     <x>640</x>
+     <y>680</y>
+     <width>151</width>
+     <height>101</height>
     </rect>
    </property>
    <property name="font">
     <font>
+     <pointsize>16</pointsize>
      <weight>75</weight>
      <bold>true</bold>
     </font>
    </property>
    <property name="text">
-    <string>Temperature</string>
-   </property>
-   <property name="icon">
-    <iconset>
-     <normalon>Resources/graph.png</normalon>
-    </iconset>
-   </property>
-   <property name="iconSize">
-    <size>
-     <width>100</width>
-     <height>100</height>
-    </size>
+    <string>Clear Readings</string>
    </property>
   </widget>
  </widget>

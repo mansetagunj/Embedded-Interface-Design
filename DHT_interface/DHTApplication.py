@@ -7,7 +7,9 @@ from PyQt5 import QtCore
 from DHT_UI import Ui_Dialog
 from threading import Timer
 from math import ceil
-import GraphPlotter
+from GraphPlotter import RealTimePlotter
+import datetime
+import matplotlib.pyplot as plt
 
 class DHTUser():
     _pin = None
@@ -27,6 +29,10 @@ class AppWindow(QDialog):
         self.ui.setupUi(self)
         self.dht = DHTUser(22,4)
         self.tempUnit = 0  # 0 - Celcius and 1 - Fahrenheit Start with Celcius state
+        
+        self.ui.todaysDateLabel.setText(datetime.datetime.now().strftime("%d %b, %Y"))
+        self.TempthresholdUpdateEvent()
+        self.HumthresholdUpdateEvent()
         self.ui.requestDataButton.clicked.connect(self.updateTempHumUI)
         self.ui.CtempButton.clicked.connect(self.setTempCelcius)
         self.ui.FtempButton.clicked.connect(self.setTempFahrenheit)
@@ -42,8 +48,18 @@ class AppWindow(QDialog):
         
         self.ui.tempUnitThresholdDisplaySlider.valueChanged.connect(self.TempthresholdUpdateEvent)
         self.ui.humUnitThresholdDisplaySlider.valueChanged.connect(self.HumthresholdUpdateEvent)
-        
         self.realTimePlotter = RealTimePlotter()
+        self.tempList = [];
+        self.humList = [];
+        self.ui.staticGraphButton.clicked.connect(self.openStaticGraph)
+        self.ui.clearReadingsButton.clicked.connect(self.clearStoredReadings)
+        
+    def openStaticGraph(self):
+        self.realTimePlotter.plotStatic(self.tempList, self.humList)
+    
+    def clearStoredReadings(self):
+        self.tempList.clear()
+        self.humList.clear()
         
     def TempthresholdUpdateEvent(self):
         self.ui.tempValueThresholdDisplayLabel.setText(str(self.ui.tempUnitThresholdDisplaySlider.value()))
@@ -58,27 +74,31 @@ class AppWindow(QDialog):
         self.ui.requestDataButton.setEnabled(False)
         print ("Timer value:" + str(self.ui.timerResolutionSpinBox.value()))
         self.now = 0
-        self.realTimePlotter.startPlotter()
+        if self.ui.realtimeGraphTimerCheckbox.isChecked() is True:
+            self.realTimePlotter.startPlotter()
         self.readingsTimer.start(self.ui.timerResolutionSpinBox.value()*1000)
     
     def timerTickEvent(self):
         self.now += 1
         humidity, temperature = self.updateTempHumUI()
-        self.realTimePlotter.putData(temperature)
+        if self.realTimePlotter.isPlotterRunning() is True:
+            self.realTimePlotter.putData([humidity,temperature])
         
     def stopTimerEvent(self):
         print ("Stop Timer")
         self.readingsTimer.stop()
-        self.realTimePlotter.stopPlotter()
+        if self.realTimePlotter.isPlotterRunning() is True:
+            self.realTimePlotter.stopPlotter()
         self.ui.stopTimerButton.setEnabled(False)
         self.ui.startTimerButton.setEnabled(True)
         self.ui.requestDataButton.setEnabled(True)
         
     def updateTimerEvent(self):
-        self.readingsTimer.stop()
-        self.now = 0
-        print ("Updated Timer value:" + str(self.ui.timerResolutionSpinBox.value()))
-        self.readingsTimer.start(self.ui.timerResolutionSpinBox.value()*1000)
+        if self.readingsTimer.isActive() is True:
+            self.readingsTimer.stop()
+            self.now = 0
+            print ("Updated Timer value:" + str(self.ui.timerResolutionSpinBox.value()))
+            self.readingsTimer.start(self.ui.timerResolutionSpinBox.value()*1000)
         
     def setTempCelcius(self):
         if (self.tempUnit == 1):  #if in Fah state
@@ -126,6 +146,7 @@ class AppWindow(QDialog):
         if(self.tempUnit == 1):
             temperature = self.convertTemp(temperature, False)
             
+        ##print ("Read: hum {}, temp {} -- th h {} t {}",humidity, temperature, self.ui.humUnitThresholdDisplaySlider.value(), self.ui.tempUnitThresholdDisplaySlider.value())
         if(humidity > self.ui.humUnitThresholdDisplaySlider.value()):
             self.ui.humThresholdAlarm.setStyleSheet("QLabel { background-color : red; color : white; }");
         else:
@@ -140,11 +161,13 @@ class AppWindow(QDialog):
         print ("Request Data")
         humidity, temperature = self.dht.read()
         if humidity is not None and temperature is not None:
+            self.tempList.append(temperature)
+            self.humList.append(humidity)
             self.updateAlarm(humidity, temperature)    
             self.ui.sensorStatus.setText("Sensor Connected");
             self.ui.sensorStatus.setStyleSheet("QLabel { background-color : green; color : white; }");
             self.updateSensorReadingsUIElement(humidity, temperature)
-            self.ui.lastRequestTime.setText(str(time.asctime(time.localtime(time.time()))))
+            self.ui.lastRequestTime.setText(datetime.datetime.now().strftime("%X"))
             return humidity,  temperature
         else:
             self.ui.sensorStatus.setText("Sensor Disconnected");
