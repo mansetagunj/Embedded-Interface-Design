@@ -5,6 +5,8 @@
 //importing the  library
 var sensor = require('./node_modules/node-dht-sensor');
 
+console.log('Gunj Manseta Nodejs DHT22 interface EID HW4');
+
 //reading from the sensor with DHT22 at pin 4
 sensor.read(22, 4, function(err, temperature, humidity) {
     if (!err) {
