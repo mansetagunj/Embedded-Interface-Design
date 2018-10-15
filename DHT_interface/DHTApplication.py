@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+
+## Author - Gunj Manseta
+## University of Colorado Boulder
+
 import sys
 import time
 import Adafruit_DHT
@@ -11,6 +15,7 @@ from GraphPlotter import RealTimePlotter
 import datetime
 import matplotlib.pyplot as plt
 
+#Class abstraction over the DHT sensor Adafruit class
 class DHTUser():
     _pin = None
     _sensorType = None
@@ -22,6 +27,7 @@ class DHTUser():
         humidity, temperature = Adafruit_DHT.read_retry(self._sensorType, self._pin)
         return humidity, temperature 
 
+## the actual application class
 class AppWindow(QDialog):
     def __init__(self):
         super().__init__()
