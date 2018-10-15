@@ -14,6 +14,7 @@ from math import ceil
 from GraphPlotter import RealTimePlotter
 import datetime
 import matplotlib.pyplot as plt
+import platform
 
 #Class abstraction over the DHT sensor Adafruit class
 class DHTUser():
@@ -22,9 +23,19 @@ class DHTUser():
     def __init__(self, sensorType, pin):
         self._pin = pin
         self._sensorType = sensorType
+        self.DHTAvail = 1
+        print ("Machine:" + platform.machine())
+        if 'i686' in platform.machine():
+            print("Running on Pi VM")
+            self.DHTAvail = 0
         
     def read(self):
-        humidity, temperature = Adafruit_DHT.read_retry(self._sensorType, self._pin)
+        if(self.DHTAvail):
+            humidity, temperature = Adafruit_DHT.read_retry(self._sensorType, self._pin)
+        else:
+            humidity = 41.41
+            temperature = 25.25
+
         return humidity, temperature 
 
 ## the actual application class
