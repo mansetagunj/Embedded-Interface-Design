@@ -21,7 +21,7 @@ class RealTimePlotter:
         self.plotterRun = False;
         
     #reference: https://engineersportal.com/blog/2018/8/14/real-time-graphing-in-python
-    def live_plotter(self, x_vec,hum_data, temp_data,line1,line2,avg1, avg2,pause_time=0.1):
+    def __live_plotter(self, x_vec,hum_data, temp_data,line1,line2,avg1, avg2,pause_time=0.1):
         
         if line1==[]:
             #print (temp_data, [(sum(temp_data)/float(len(temp_data)))]*self.size)
@@ -109,11 +109,11 @@ class RealTimePlotter:
         self.bx.set_xlabel('Samples')
         self.bx.set_ylabel('Temperature')
         
-        workerThread = Thread(target=self.plotterWorker)
+        workerThread = Thread(target=self.__plotterWorker)
         workerThread.daemon = True
         workerThread.start()
         
-    def plotterWorker(self):
+    def __plotterWorker(self):
 
         x_vec = np.linspace(0,self.size,self.size+1)[0:-1]
         y1_vec = np.zeros(len(x_vec))
@@ -137,7 +137,7 @@ class RealTimePlotter:
             
             y1_vec[-1] = humidity
             y2_vec[-1] = temperature
-            readingsHum_vec, readingsTemp_vec, avg_hum, avg_temp= self.live_plotter(x_vec,y1_vec, y2_vec,readingsHum_vec,readingsTemp_vec, avg_hum, avg_temp)
+            readingsHum_vec, readingsTemp_vec, avg_hum, avg_temp= self.__live_plotter(x_vec,y1_vec, y2_vec,readingsHum_vec,readingsTemp_vec, avg_hum, avg_temp)
             y1_vec = np.append(y1_vec[1:],0.0)
             y2_vec = np.append(y2_vec[1:],0.0)
             

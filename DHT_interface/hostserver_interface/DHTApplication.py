@@ -15,6 +15,7 @@ from GraphPlotter import RealTimePlotter
 import datetime
 import matplotlib.pyplot as plt
 import platform
+from database import Database
 
 #Class abstraction over the DHT sensor Adafruit class
 class DHTUser():
@@ -70,6 +71,24 @@ class AppWindow(QDialog):
         self.humList = [];
         self.ui.staticGraphButton.clicked.connect(self.openStaticGraph)
         self.ui.clearReadingsButton.clicked.connect(self.clearStoredReadings)
+        
+        ##database object
+        self.db = Database();
+        self.db.start();
+        self.dbreadingsTimer = QtCore.QTimer()
+        self.dbreadingsTimer.timeout.connect(self.__updateDBEvent)
+        self.dbreadingsTimer.start(5000) #5sec timer
+        
+    def __updateDBEvent(self):
+        humidity, temperature = self.dht.read()
+        if humidity is not None and temperature is not None:
+            data = [datetime.datetime.now().strftime("%x:%X"),temperature,humidity]
+            self.db.putData(data)
+            #print (data)
+            self.__setSensorStatus(True)
+        else:
+            self.__setSensorStatus(False)
+        
         
     def openStaticGraph(self):
         self.realTimePlotter.plotStatic(self.tempList, self.humList)
@@ -174,23 +193,39 @@ class AppWindow(QDialog):
         else:
             self.ui.tempThresholdAlarm.setStyleSheet("QLabel { background-color : none; color : white; }");
 
+    def __setSensorStatus(self, isConnected = True):
+        if isConnected:
+            self.ui.sensorStatus.setText("Sensor Connected");
+            self.ui.sensorStatus.setStyleSheet("QLabel { background-color : green; color : white; }");
+        else:
+            self.ui.sensorStatus.setText("Sensor Disconnected");
+            self.ui.sensorStatus.setStyleSheet("QLabel { background-color : red; color : white; }")
+            
+            
     def updateTempHumUI(self):
         #print ("Request Data")
         humidity, temperature = self.dht.read()
         if humidity is not None and temperature is not None:
             self.tempList.append(temperature)
             self.humList.append(humidity)
-            self.updateAlarm(humidity, temperature)    
-            self.ui.sensorStatus.setText("Sensor Connected");
-            self.ui.sensorStatus.setStyleSheet("QLabel { background-color : green; color : white; }");
+            self.updateAlarm(humidity, temperature)
+            self.__setSensorStatus(True)
+            #self.ui.sensorStatus.setText("Sensor Connected");
+            #self.ui.sensorStatus.setStyleSheet("QLabel { background-color : green; color : white; }");
             self.updateSensorReadingsUIElement(humidity, temperature)
             self.ui.lastRequestTime.setText(datetime.datetime.now().strftime("%X"))
             return humidity,  temperature
         else:
-            self.ui.sensorStatus.setText("Sensor Disconnected");
-            self.ui.sensorStatus.setStyleSheet("QLabel { background-color : red; color : white; }")
+            self.__setSensorStatus(False)
+            #self.ui.sensorStatus.setText("Sensor Disconnected");
+            #self.ui.sensorStatus.setStyleSheet("QLabel { background-color : red; color : white; }")
             return 0, 0
         
+    def closeEvent(self, event):
+        print ("Application closing. Cleaning up resources")
+        self.dbreadingsTimer.stop()
+        self.db.stopThread()
+        self.db.join()
     
 
 if __name__ == '__main__':
