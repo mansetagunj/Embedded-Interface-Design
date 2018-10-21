@@ -77,7 +77,7 @@ class AppWindow(QDialog):
         self.db.start();
         self.dbreadingsTimer = QtCore.QTimer()
         self.dbreadingsTimer.timeout.connect(self.__updateDBEvent)
-        self.dbreadingsTimer.start(5000) #5sec timer
+        self.dbreadingsTimer.start(1000) #5sec timer
         
     def __updateDBEvent(self):
         humidity, temperature = self.dht.read()
@@ -210,20 +210,19 @@ class AppWindow(QDialog):
             self.humList.append(humidity)
             self.updateAlarm(humidity, temperature)
             self.__setSensorStatus(True)
-            #self.ui.sensorStatus.setText("Sensor Connected");
-            #self.ui.sensorStatus.setStyleSheet("QLabel { background-color : green; color : white; }");
             self.updateSensorReadingsUIElement(humidity, temperature)
             self.ui.lastRequestTime.setText(datetime.datetime.now().strftime("%X"))
             return humidity,  temperature
         else:
             self.__setSensorStatus(False)
-            #self.ui.sensorStatus.setText("Sensor Disconnected");
-            #self.ui.sensorStatus.setStyleSheet("QLabel { background-color : red; color : white; }")
             return 0, 0
         
     def closeEvent(self, event):
         print ("Application closing. Cleaning up resources")
         self.dbreadingsTimer.stop()
+        latestData = self.db.getLatestData(10)
+        print ("Return data"),
+        print (latestData)
         self.db.stopThread()
         self.db.join()
     
