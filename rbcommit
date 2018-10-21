@@ -1,0 +1,8 @@
+#!/bin/bash
+tempfile=$1
+echo "Please enter a commit message. Press RETURN to complete the message."
+read line
+echo $line > $tempfile
+
+
+#reference:https://gist.github.com/danchoi/6874170
