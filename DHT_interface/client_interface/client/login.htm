@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+div {
+    background-color: lightblue;
+    width: 300px;
+    border: 25px solid Navy;
+    padding: 50px;
+    margin: 100px;
+}
+</style>
+<script type="text/javascript">
+  function getlogin(form){
+    if (form.username.value=="project2") {
+		if(form.password.value=="123456"){
+      location="client.htm"
+    }}
+    else {
+      alert("Invalid Key")
+    }
+  }
+</script>
+</head>
+<body style=background-color:Teal;">
+<center>
+<div>
+
+<h1 id="page heading" style=color:Navy;>LOGIN SCREEN</h1>
+<h4 id="page heading" style=color:MidnightBlue;>Eid Project 2 Gunj & Shreya</h4>
+<form>
+<label for="username">USERNAME:</label>
+<input type="password" id="username" style=margin:10px;></input><br>
+<label for="password">PASSWORD:</label>
+<input type="password" id="password" style=margin:10px;></input><br>
+<input type="button" id="submit" value="Submit" onClick="getlogin(form)" style=width:100px; style=height:20px;></input>
+</form>
+<input type="button" value="Close" onclick="self.close()" style=margin:10px;style=width:20px; style=height:20px;>
+</div>
+</center>
+</body>
+</html>
+
