@@ -27,7 +27,7 @@ then sends these values over to the client. The javascript at the client side so
 The corresponding values along with the timestamp are displayed on the client side on button press. Prior to that the client displays a login screen. The 
 username is "project2" and the password is "123456". On entering correct credentials the main "weather report" html page is displayed.
  
-#NECESSARY INSTALLATIONS FOR THE PROJECT 2
+## NECESSARY INSTALLATIONS FOR THE PROJECT 2
 1. tornado using the command: $ sudo pip install tornado
 2. SQLite for database : $sudo apt-get install mysql-server python-mysqldb
 3. matplotlib for graph: $sudo apt-get install python3-matplotlib
