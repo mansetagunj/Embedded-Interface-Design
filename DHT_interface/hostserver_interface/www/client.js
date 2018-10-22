@@ -1,7 +1,18 @@
 
 $(document).ready(function(){
-	//var socket = new WebSocket("ws://127.0.0.1:8888/ws");
-	var socket = new WebSocket("ws://10.0.0.137:8888/ws");
+
+	var queryDict = {}
+	location.search.substr(1).split("&").forEach(function(item) {
+	    queryDict[item.split("=")[0]] = item.split("=")[1]
+	})
+
+	alert("Welcome " + queryDict["username"])
+	var ip = queryDict["ip"]
+	var host = "ws://"+ ip + ":8888/ws"
+	//alert(host)
+	var socket = new WebSocket(host);
+	//var socket = new WebSocket("ws://10.0.0.137:8888/ws");
+
     	
 	socket.onerror = function(error){
 		alert("Error Connecting to Server")
@@ -21,6 +32,39 @@ $(document).ready(function(){
 		//alert(text);
 		//socket.send(text);
 	}
+
+
+	$("#connect").click(function(){
+	
+		host = "ws://"+ $("#ipPort").val() + ":8888/ws"
+		socket = new WebSocket(host);
+
+		socket.onerror = function(error){
+			alert("Error Connecting to Server")
+		}	
+	    
+		socket.onclose = function(evt) {
+			clearInterval(1000)
+	      		alert("Refresh the Webpage!");
+	    	}
+	
+		socket.onopen = function(evt) { 
+			alert("websocket handshake performed!");
+			setInterval(pingConnection, 1000);
+			//var text = '{ "request" : [' +
+			//'{ "entity":"load" , "type":"none" }'+
+			//']}';
+			//alert(text);
+			//socket.send(text);
+		}
+
+
+		socket.onmessage = function(msgevt){
+		//alert(msgevt.data);
+		messageParserAction(msgevt.data);
+	}
+
+	});
 
 	var messageParserAction = function(msg){
 		//alert("Parsing");
