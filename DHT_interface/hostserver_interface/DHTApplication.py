@@ -78,7 +78,7 @@ class AppWindow(QDialog):
         self.db.start()
         self.dbreadingsTimer = QtCore.QTimer()
         self.dbreadingsTimer.timeout.connect(self.__updateDBEvent)
-        self.dbreadingsTimer.start(1000) #5sec timer
+        self.dbreadingsTimer.start(5000) #5sec timer
         
         #webserver
         self.server = DHTWebserver(self.db, True)
@@ -87,6 +87,7 @@ class AppWindow(QDialog):
     def __updateDBEvent(self):
         humidity, temperature = self.dht.read()
         if humidity is not None and temperature is not None:
+            #data = [datetime.datetime.now().strftime("%x:%X"),"{0:.2f}".format(temperature),"{0:.2f}".format(humidity)]
             data = [datetime.datetime.now().strftime("%x:%X"),temperature,humidity]
             self.db.putData(data)
             #print (data)

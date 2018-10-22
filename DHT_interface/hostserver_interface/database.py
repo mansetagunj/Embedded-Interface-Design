@@ -135,7 +135,7 @@ class Database(Thread):
                     #print("Sql: " + sql)
                     self.dbcursor.execute(sql)
                     rows = self.dbcursor.fetchall()
-                    print ("Len of rows: " + str(len(rows)))
+                    #print ("Len of rows: " + str(len(rows)))
                     #for row in rows:
                     #    print (row)
                     #print ("Rows:",rows)
