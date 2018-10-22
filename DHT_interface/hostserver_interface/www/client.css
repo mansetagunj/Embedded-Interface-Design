@@ -1,0 +1,46 @@
+body, html {
+    height: 100%;
+    margin: 0;
+
+    /* The image used */
+    background-image: url("background.jpg");
+
+    /* Full height */
+    height: 100%; 
+
+    /* Center and scale the image nicely */
+    background-position: stretch;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.bg {
+    /* The image used */
+    background-image: url("cold.jpg");
+
+    /* Full height */
+    height: 100%; 
+
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.btn-group button {
+    background-color: #008CBA; /* Green background */
+    border: 2px solid #555555; /* Green border */
+    color: white; /* White text */
+    padding: 10px 24px; /* Some padding */
+    cursor: pointer; /* Pointer/hand icon */
+    width: 40%; /* Set a width if needed */
+    margin: 20px;
+    margin-bottom: 10px;
+	
+}
+.btn-group button:not(:last-child) {
+    border-bottom: none; /* Prevent double borders */
+}
+
+/* Add a background color on hover */
+.btn-group button:hover {
+    background-color: #3e8e41;
+}

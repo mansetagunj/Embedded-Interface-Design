@@ -16,6 +16,7 @@ import datetime
 import matplotlib.pyplot as plt
 import platform
 from database import Database
+from DHTServer import DHTWebserver
 
 #Class abstraction over the DHT sensor Adafruit class
 class DHTUser():
@@ -73,11 +74,15 @@ class AppWindow(QDialog):
         self.ui.clearReadingsButton.clicked.connect(self.clearStoredReadings)
         
         ##database object
-        self.db = Database();
-        self.db.start();
+        self.db = Database()
+        self.db.start()
         self.dbreadingsTimer = QtCore.QTimer()
         self.dbreadingsTimer.timeout.connect(self.__updateDBEvent)
         self.dbreadingsTimer.start(1000) #5sec timer
+        
+        #webserver
+        self.server = DHTWebserver(self.db, True)
+        self.server.start()
         
     def __updateDBEvent(self):
         humidity, temperature = self.dht.read()
@@ -220,11 +225,13 @@ class AppWindow(QDialog):
     def closeEvent(self, event):
         print ("Application closing. Cleaning up resources")
         self.dbreadingsTimer.stop()
-        latestData = self.db.getLatestData(10)
-        print ("Return data"),
-        print (latestData)
+        #latestData = self.db.getLatestData(10)
+        #print ("Return data"),
+        #print (latestData)
+        self.server.stop()
         self.db.stopThread()
-        self.db.join()
+        #self.db.join()
+        #self.server.join()
     
 
 if __name__ == '__main__':

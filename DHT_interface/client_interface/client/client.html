@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>WEATHER REPORT</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+  <link rel="stylesheet" href="client.css">
+  <script src="client.js"></script>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Embedded Interface Design Project 2</h1>
+<h2>Designed and Developed by Gunj Manseta and Shreya Chakraborty</h2>
+  <ul class="nav nav-pills">
+    <li class="active"><a data-toggle="pill" href="#home">Home</a></li>
+    <li><a data-toggle="pill" href="#menu1">GRAPH</a></li>
+    <li><a data-toggle="pill" href="#menu2">Readme</a></li>
+    <li><a data-toggle="pill" href="#menu3">LINKS</a></li>
+  </ul>
+<center>  
+  <div class="tab-content">
+    <div id="home" class="tab-pane fade in active">
+      <h3>HOME</h3>
+	  <h3 style=margin:20px>Temperature and Humidity Analysis</h3>
+      <p>Home screen showing temperature and humidity values</p>
+	  <div class="btn-group">
+		<label maxlength ="100" style=height:40px; style=max-width:500px">Timestamp</label>
+		<input type="text" id="timestamp" value="--------------" maxlength ="100" style=height:40px; style=max-width:500px"><br>
+		<button id="P_temp">GET LAST TEMP</button>
+		<input type="text" id="temp_p" value="--------------" maxlength ="100" style=height:40px; style=max-width:500px"><br>
+		<button id="A_temp">GET AVG TEMP</button>
+		<input type="text" id="temp_a" value="--------------" maxlength ="100" style=height:40px; style=max-width:500px"><br>
+		<button id="H_temp">GET HIGHEST TEMP</button>
+		<input type="text" id="temp_h" value="--------------" maxlength ="100" style=height:40px; style=max-width:500px"><br>
+		<button id="L_temp">GET LOWEST TEMP</button>
+		<input type="text" id="temp_l" value="--------------" maxlength ="100" style=height:40px; style=max-width:500px"><br>
+		<button id="P_hum">GET LAST HUM</button>
+		<input type="text" id="hum_p" value="--------------" maxlength ="100" style=height:40px; style=max-width:500px"><br>
+		<button id="A_hum">GET AVG HUM</button>
+		<input type="text" id="hum_a" value="--------------" maxlength ="100" style=height:40px; style=max-width:500px"><br>
+		<button id="H_hum">GET HIGHEST HUM</button>
+		<input type="text" id="hum_h" value="--------------" maxlength ="100" style=height:40px; style=max-width:500px"><br>
+		<button id="L_hum">GET LOWEST HUM</button>
+		<input type="text" id="hum_l" value="--------------" maxlength ="100" style=height:40px; style=max-width:500px"><br>
+		<button id="clear" style=margin:70px; style=height:20px; style=width:10px;>CLEAR</button>
+		</div>
+    </div>
+    <div id="menu1" class="tab-pane fade">
+      <h3>GRAPH VIEW</h3>
+      <p>Displays Graph</p>
+		
+		<input type="button" id="img1" value="Click me to display graph" onclick="showimage()" style=background-color:#008CBA; color =white; style=width:200px; style=heigth:60px;><br>
+		<img id="Image" src="samplegraph.jpg" style="visibility:hidden"/>
+
+		
+	</div>
+    <div id="menu2" class="tab-pane fade">
+      <h3>Readme</h3>
+      <p>Participants: This project is a joined effort od Gunj Manseta and Shreya Chakraborty</p><br>
+	  <p>Project Overview: The project consists of two modules - client and server both running on rpi...</p><br>
+	  <p>Project Installations: To run this project install the following...</p><br>
+	  <p>Project Additions: The following extra credits have been attempted..</p><br>
+      
+    </div>
+    <div id="menu3" class="tab-pane fade">
+      <h3>LINKS</h3>
+      
+	  <h2>HTML Links used as reference in this project</h2>
+	  <ol>
+		  <li><p><a href="https://www.w3schools.com/html/">HTML tutorial</a></p></li>
+		  <li><p><a href="https://www.w3schools.com/css/tryit.asp?filename=trycss_boxmodel">HTML box model</a></p></li>
+		  <li><p><a href="https://www.w3schools.com/jquery/default.asp">JQUERY tutorial</a></p></li>
+		  <li><p><a href="https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_button_group_justified">HTML buttons</a></p></li>
+		  <li><p><a href="https://www.html5rocks.com/en/tutorials/websockets/basics/">Web Sockets tutorial basics</a></p></li>
+		  <li><p><a href="https://www.w3schools.com/html/html_styles.asp">HTML styles</a></p></li>
+		  <li><p><a href="https://www.vectorstock.com/">background image</a></p></li>
+		  <li><p><a href="https://www.quackit.com/css/css_color_codes.cfm">Color Codes</a></p></li>
+		  <li><p><a href="https://www.w3schools.com/howto/howto_css_social_login.asp">login form Reference</a></p></li>
+		  <li><p><a href="https://www.w3schools.com/bootstrap/tryit.asp?filename=trybs_pills_dynamic&stacked=h">Mutliple tabs Reference</a></p></li>
+	  </ol>
+    </div>
+  </div>
+</div>
+<center>
+</body>
+</html>
