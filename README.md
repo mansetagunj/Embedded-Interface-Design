@@ -15,17 +15,13 @@ Referernces:
 
 # INSTALLATION INSTRUCTIONS:
 Run this project on the server rpi using the following command on terminal : ./DHTApplication.py
-Run this project on the client rpi using by clicking index.html
+Run this project on the client by clicking index.html
 
 # PROJECT WORK :
 The project is a joint effort by Gunj Manseta and Shreya Chakraborty. Any similarities with anyone else's work other than the ones 
 specified in the references is purely coincidental. The Project is a continuation to project1.In project 1 we interfaced a temp/humidity
-sensor DHT-22 with RPI and design a UI to display the current temperature, humidity, time of requesting, the status of the sensor and so on.
-In this project, there are two rpi one client and other server. The server rpi is interfaced with the sensor and gather data periodically
-and stores it in a data base. The latest values, avg values, min and max values are computed from the values in the database and the server
-then sends these values over to the client. The javascript at the client side sorts out the data and displays the hmtl page with various buttons. 
-The corresponding values along with the timestamp are displayed on the client side on button press. Prior to that the client displays a login screen. The 
-username is "project2" and the password is "123456". On entering correct credentials the main "weather report" html page is displayed.
+sensor DHT-22 with RPI and design a UI to display the current temperature, humidity, time of requesting, the status of the sensor 
+and so on.In this project, there are two rpi one client and other server. The server rpi is interfaced with the sensor and gather data periodically and stores it in a data base. The latest values, avg values, min and max values are computed from the values in the database and the serverthen sends these values over to the client. The javascript at the client side sorts out the data and displays the hmtl page with various buttons. The corresponding values along with the timestamp are displayed on the client side on button press. Prior to that the client displays a login screen. The username is "project2" and the password is "123456". On entering correct credentials the main "weather report" html page is displayed.
  
 ## NECESSARY INSTALLATIONS FOR THE PROJECT 2
 1. tornado using the command: $ sudo pip install tornado
