@@ -23,7 +23,7 @@ specified in the references is purely coincidental. The Project is a continuatio
 sensor DHT-22 with RPI and design a UI to display the current temperature, humidity, time of requesting, the status of the sensor 
 and so on.In this project, there are two rpi one client and other server. The server rpi is interfaced with the sensor and gather data periodically and stores it in a data base. The latest values, avg values, min and max values are computed from the values in the database and the serverthen sends these values over to the client. The javascript at the client side sorts out the data and displays the hmtl page with various buttons. The corresponding values along with the timestamp are displayed on the client side on button press. Prior to that the client displays a login screen. The username is "project2" and the password is "123456". On entering correct credentials the main "weather report" html page is displayed.
  
-# NECESSARY INSTALLATIONS FOR THE PROJECT 2
+## NECESSARY INSTALLATIONS FOR THE PROJECT 2
 1. tornado using the command: $ sudo pip install tornado
 2. SQLite for database : $sudo apt-get install mysql-server python-mysqldb
 3. matplotlib for graph: $sudo apt-get install python3-matplotlib
