@@ -33,22 +33,22 @@ class WSHandler(tornado.websocket.WebSocketHandler):
             global db
             entity = requestObject["request"][0]["entity"]
             requestObject["response"] = requestObject.pop("request")
-            #print ("Entity:",entity)
+            print ("Entity:",entity)
             if "temperature" in entity:
                 #handle temperature
                 type = requestObject["response"][0]["type"]
                 if "latest" in type:
                     latestData = list(db.getLatestData(1)[0])
-                    #print ("Retrieved data:",latestData)
+                    print ("Retrieved data:",latestData)
                 elif "average" in type:
                     latestData = list(db.getTemp(0))
-                    #print ("Retrieved data:",latestData)
+                    print ("Retrieved data:",latestData)
                 elif "lowest" in type:
                     latestData = list(db.getTemp(1))
-                    #print ("Retrieved data:",latestData)
+                    print ("Retrieved data:",latestData)
                 elif "highest" in type:
                     latestData = list(db.getTemp(2))
-                    #print ("Retrieved data:",latestData)
+                    print ("Retrieved data:",latestData)
                 else:
                     print("Error")
                 requestObject["response"][0]["value"] = latestData[1]
@@ -139,14 +139,14 @@ class DHTWebserver(Thread):
         self.server.listen(8888)
         ipAddr= socket.gethostbyname(socket.gethostname())
         print ('___Websocket Server Started at %s___' % (ipAddr))
-        self.ioinstance = tornado.ioloop.IOLoop.instance()
+        self.ioinstance = tornado.ioloop.IOLoop.current()
         self.ioinstance.start()
+        self.ioinstance.close()
+        print ("Webserver stopped")
         
     def stop(self):
-        self.ioinstance.stop()
+        self.ioinstance.add_callback(self.ioinstance.stop)
         print("Closing Websocket server")
-        #self.db.stopThread()
-        print("Closing DB")
         
     
  

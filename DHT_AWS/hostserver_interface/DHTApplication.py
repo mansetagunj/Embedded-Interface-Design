@@ -50,6 +50,10 @@ class AppWindow(QDialog):
         self.dht = DHTUser(22,4)
         self.tempUnit = 0  # 0 - Celcius and 1 - Fahrenheit Start with Celcius state
         
+        ##database object
+        self.db = Database()
+        self.db.start()
+        
         self.minT = 0
         self.maxT = 0
         self.minH = 0
@@ -80,9 +84,6 @@ class AppWindow(QDialog):
         self.ui.staticGraphButton.clicked.connect(self.openStaticGraph)
         self.ui.clearReadingsButton.clicked.connect(self.clearStoredReadings)
         
-        ##database object
-        self.db = Database()
-        self.db.start()
         
         self.AWSMQTT = AWSMQTTInterface()
         
@@ -97,13 +98,18 @@ class AppWindow(QDialog):
     def __takeReadings(self):
         humidity, temperature = self.dht.read()
         if humidity is not None and temperature is not None:
+            self.__setSensorStatus(True)
             self.updateTempHumUIElem(humidity, temperature)
             self.updateTempHumExtraUIElem(humidity, temperature)
             timestamp = datetime.datetime.now().strftime("%x:%X")
-            humidity = "{0:.2f}".format(humidity)
-            temperature = "{0:.2f}".format(temperature)
+            #humidity = "{0:.2f}".format(humidity)
+            #temperature = "{0:.2f}".format(temperature)
             self.__updateDBEvent(timestamp, humidity, temperature)
             self.__awsPushData(timestamp, humidity,temperature)
+            #print ("Get DB:",self.db.getLatestData(1))
+        else:
+            print ("ERROR SENSOR DISCONNECTED")
+            self.__setSensorStatus(False)
         
     def __awsPushData(self, timestamp, humidity,temperature):
         if humidity is not None and temperature is not None:
@@ -116,9 +122,9 @@ class AppWindow(QDialog):
     def __updateDBEvent(self, timestamp, humidity, temperature):
         if humidity is not None and temperature is not None:
             #data = [datetime.datetime.now().strftime("%x:%X"),"{0:.2f}".format(temperature),"{0:.2f}".format(humidity)]
-            data = [timestamp,temperature,humidity]
+            data = [timestamp,round(temperature,2),round(humidity,2)]
             self.db.putData(data)
-            #print (data)
+            #print ("DB Data:",data)
             self.__setSensorStatus(True)
         else:
             self.__setSensorStatus(False)
@@ -255,27 +261,28 @@ class AppWindow(QDialog):
             self.minT = min(self.minT, temperature)
             self.maxT = max(self.maxT, temperature)
             self.minH = min(self.minH, humidity)
-            self.maxH = min(self.maxH, humidity)
+            self.maxH = max(self.maxH, humidity)
             
-            self.avgT = ((self.avgT*self.readingCount) + temperature) / (self.readingCount + 1)
-            self.avgH = ((self.avgH*self.readingCount) + humidity) / (self.readingCount + 1)
-            print ("AVG H:", self.avgH)
+            #print ("Count:",self.readingCount," Curr H:",humidity, " Before AVG H:", self.avgH)
+            self.avgT = round((((self.avgT*self.readingCount) + temperature) / (self.readingCount + 1)),2)
+            self.avgH = round((((self.avgH*self.readingCount) + humidity) / (self.readingCount + 1)),2)
+            #print ("Count:",self.readingCount," Curr H:",humidity, " After AVG H:", self.avgH)
             
             self.readingCount += 1
             
               
             if self.tempUnit == 1:  ## we need temp values in F
-                self.ui.avgtemperatureLCD.display("{:.2f}".format(self.convertTemp(self.avgT, False)))   
-                self.ui.mintemperatureLCD.display("{:.2f}".format(self.convertTemp(self.minT, False)))
-                self.ui.maxtemperatureLCD.display("{:.2f}".format(self.convertTemp(self.maxT, False)))
+                self.ui.avgtemperatureLCD.display("{0:.2f}".format(self.convertTemp(self.avgT, False)))   
+                self.ui.mintemperatureLCD.display("{0:.2f}".format(self.convertTemp(self.minT, False)))
+                self.ui.maxtemperatureLCD.display("{0:.2f}".format(self.convertTemp(self.maxT, False)))
             else:
-                self.ui.avgtemperatureLCD.display("{:.2f}".format(self.avgT))   
-                self.ui.mintemperatureLCD.display("{:.2f}".format(self.minT))
-                self.ui.maxtemperatureLCD.display("{:.2f}".format(self.maxT))
+                self.ui.avgtemperatureLCD.display("{0:.2f}".format(self.avgT))  
+                self.ui.mintemperatureLCD.display("{0:.2f}".format(self.minT))
+                self.ui.maxtemperatureLCD.display("{0:.2f}".format(self.maxT))
                 
-            self.ui.avghumidityLCD.display("{:.2f}".format(self.avgH))
-            self.ui.minhumidityLCD.display("{:.2f}".format(self.minH))  
-            self.ui.maxhumidityLCD.display("{:.2f}".format(self.maxH))
+            self.ui.avghumidityLCD.display("{0:.2f}".format(self.avgH))
+            self.ui.minhumidityLCD.display("{0:.2f}".format(self.minH))  
+            self.ui.maxhumidityLCD.display("{0:.2f}".format(self.maxH))
         
         
     def updateTempHumUIElem(self,humidity, temperature):
@@ -294,13 +301,12 @@ class AppWindow(QDialog):
     def closeEvent(self, event):
         print ("Application closing. Cleaning up resources")
         self.pushreadingsTimer.stop()
-        #latestData = self.db.getLatestData(10)
-        #print ("Return data"),
-        #print (latestData)
+        self.readingsTimer.stop()
+
         self.server.stop()
+        #self.server.join()
         self.db.stopThread()
         #self.db.join()
-        #self.server.join()
     
 
 if __name__ == '__main__':

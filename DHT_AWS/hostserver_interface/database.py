@@ -13,7 +13,6 @@ class Database(Thread):
         print ("init db")
         global referenceCount
         if(referenceCount == 0):
-            referenceCount += 1;
             #open db
             self.dbname = dbname
             ##create queue interface
@@ -21,6 +20,7 @@ class Database(Thread):
             self.dbcmdQ = queue.Queue()
             self.running = 0
             Thread.__init__(self)
+        referenceCount += 1;
             
     def __POSTMESSAGE(self,cmdstring, dataList = []):
         if self.running == 0:
@@ -73,8 +73,10 @@ class Database(Thread):
         print("Ref count:",referenceCount)
         if referenceCount == 0:
             while(self.dbdataQ.empty() != True):
+                print ("Waiting data Q to be empty")
                 continue
             self.running = 0
+        print ("Stopped DB Thread")
     
     def __initfunction(self):
         self.dbHandle = db.connect(self.dbname)
