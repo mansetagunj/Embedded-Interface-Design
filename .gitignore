@@ -1,3 +1,4 @@
 DHT_nodejs/dht-sensor.log
 **/__pycache__/*
 **/AWSConfig/*
+**/access.csv

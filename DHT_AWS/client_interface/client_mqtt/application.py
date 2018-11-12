@@ -1,4 +1,4 @@
-
+#!/usr/bin/env python3
 #@Author: Shreya Chakraborty
 #Project 1 EID-2018
 #Professor: Bruce Montgomery
@@ -17,6 +17,7 @@ from PyQt5.QtWidgets import QTableWidget,QTableWidgetItem
 from PyQt5 import QtCore, QtGui, QtWidgets
 from clientUI import Ui_dialog
 from login import Ui_login
+import csv
 
 
 class LoginWindow(QDialog):
@@ -45,7 +46,14 @@ class LoginWindow(QDialog):
 
 class AppWindow(QDialog):
     def __init__(self):
-        self.sqs = boto3.client('sqs', region_name = 'us-east-2', aws_access_key_id='AKIAJD5UCSS2RT2LSLTQ',aws_secret_access_key='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')
+        
+        with open('access.csv', 'r') as f:
+            reader = csv.reader(f)
+            keyList = list(reader)[0]
+    
+        self.sqs = boto3.client('sqs', region_name = 'us-east-2', aws_access_key_id=keyList[0],aws_secret_access_key=keyList[1])
+        keyList = []
+        reader = None
         self.qURL='https://sqs.us-east-2.amazonaws.com/114151835583/piSensordata.fifo'
         super(AppWindow,self).__init__()
         self.ui = Ui_dialog()
