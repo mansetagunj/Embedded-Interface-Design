@@ -92,9 +92,9 @@ class AppWindow(QDialog):
         while(count< 3):
             getData = self.sqs.receive_message(QueueUrl=self.qURL , MaxNumberOfMessages=10)
             #print ("getlist: ", getlist)
-            if'Messages' not in getData:
-                print("message not in get list count:" +format(count - 1))
-                break
+            if getData is None or 'Messages' not in getData:
+                print("Tyring message not in get list count:" +format(count - 1))
+                continue;
             
             # Process messages by printing out body
             list_of_values = []
@@ -116,28 +116,29 @@ class AppWindow(QDialog):
                     self.avg_t_list.append(data["avgT"])
                     self.avg_h_list.append(data["avgH"])
                     self.time_list.append(data["timestamp"])
-                    #itemnum += 1
-         #for priniting the values we use zip -Iterate over multiple lists in parallel
-            for curr_t,avg_t,max_t,min_t,curr_h,avg_h,max_h,min_h,time_t in zip(self.curr_t_list,self.avg_t_list,self.max_t_list, self.min_t_list, self.curr_h_list, self.avg_h_list, self.max_h_list, self.min_h_list,self.time_list):      
-                
-                displayString += "Item Number : " +str(itemnum)+ "\n" + \
-                                "Present Temperature: {0:.2f}".format((float(curr_t) *self.mul) + self.add)+ " " + self.unit + "\n" + \
-                               "Avg Temperature: {0:.2f}".format((float(avg_t) *self.mul)+ self.add) + " " + self.unit + "\n" + \
-                               "Max Temperature: {0:.2f}".format((float(max_t) *self.mul)+ self.add) + " " + self.unit + "\n" + \
-                               "Min Temperature: {0:.2f}".format((float(min_t) *self.mul)+ self.add) + " " + self.unit + "\n"+ \
-                               "Present Humidity: {0:0.1f}%".format(float(curr_h)) + "\n" + \
-                               "Avg Humidity: {0:0.1f}%".format(float(avg_h)) + "\n" + \
-                               "Max Humidity: {0:0.1f}%".format(float(max_h))+ "\n" + \
-                               "Min Humidity: {0:0.1f}%".format(float(min_h)) + "\n" + \
-                               "Timestamp: "+ str(time_t) + " \n\n"
-                itemnum += 1
-                
-                print("count")
-                print(count)
-                count = count + 1
-            
             else:
                 self.ui.display_values.setText("Error Fetching Data from the Queue \n")
+                break
+                    #itemnum += 1
+            #print(count)
+            count = count + 1
+            print("count", count)
+            
+         #for priniting the values we use zip -Iterate over multiple lists in parallel
+        for curr_t,avg_t,max_t,min_t,curr_h,avg_h,max_h,min_h,time_t in zip(self.curr_t_list,self.avg_t_list,self.max_t_list, self.min_t_list, self.curr_h_list, self.avg_h_list, self.max_h_list, self.min_h_list,self.time_list):      
+        
+            displayString += "Item Number : " +str(itemnum)+ "\n" + \
+                        "Present Temperature: {0:.2f}".format((float(curr_t) *self.mul) + self.add)+ " " + self.unit + "\n" + \
+                       "Avg Temperature: {0:.2f}".format((float(avg_t) *self.mul)+ self.add) + " " + self.unit + "\n" + \
+                       "Max Temperature: {0:.2f}".format((float(max_t) *self.mul)+ self.add) + " " + self.unit + "\n" + \
+                       "Min Temperature: {0:.2f}".format((float(min_t) *self.mul)+ self.add) + " " + self.unit + "\n"+ \
+                       "Present Humidity: {0:0.1f}%".format(float(curr_h)) + "\n" + \
+                       "Avg Humidity: {0:0.1f}%".format(float(avg_h)) + "\n" + \
+                       "Max Humidity: {0:0.1f}%".format(float(max_h))+ "\n" + \
+                       "Min Humidity: {0:0.1f}%".format(float(min_h)) + "\n" + \
+                       "Timestamp: "+ str(time_t) + " \n\n"
+            itemnum += 1
+            
                 
         self.ui.display_values.setText("Number of items fetched from Queue :" + str(itemnum-1) + "/30" + "\n" + "Queue Data is as follows:\n"  + displayString )
         
