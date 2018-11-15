@@ -93,8 +93,8 @@ class AppWindow(QDialog):
             getData = self.sqs.receive_message(QueueUrl=self.qURL , MaxNumberOfMessages=10)
             #print ("getlist: ", getlist)
             if getData is None or 'Messages' not in getData:
-                print("Tyring message not in get list count:" +format(count - 1))
-                continue;
+                print("No Messages Available. Count:" +format(count - 1))
+                break
             
             # Process messages by printing out body
             list_of_values = []
