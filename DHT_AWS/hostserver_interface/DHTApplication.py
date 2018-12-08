@@ -10,6 +10,7 @@ from PyQt5.QtWidgets import QApplication, QDialog
 from PyQt5 import QtCore
 from DHT_UI import Ui_Dialog
 from threading import Timer
+import threading
 from math import ceil
 from GraphPlotter import RealTimePlotter
 import datetime
@@ -18,6 +19,9 @@ import platform
 from database import Database
 from DHTServer import DHTWebserver
 from AWS_interface import AWSMQTTInterface
+
+sys.path.append('./../commonProtocol/')
+from MQTTWrapper import MQTTWrapper
 
 #Class abstraction over the DHT sensor Adafruit class
 class DHTUser():
@@ -95,6 +99,24 @@ class AppWindow(QDialog):
         self.server = DHTWebserver(self.db, True)
         self.server.start()
         
+        #protocol comparsion objects
+        #mqtt
+        self.mqtt = MQTTWrapper("gunjshreya","iot.eclipse.org")
+        self.mqtt.subscribe("test/MQTTClient", self.__myMQTTSubCallback)
+        self.protocolThread = threading.Thread(target=self.__startProtocolLoop)
+        self.protocolThread.daemon = True
+        self.protocolThread.start()
+        
+        
+    def __startProtocolLoop(self):
+        self.mqtt.loopStart()
+        
+        
+    def __myMQTTSubCallback(self, mqttObject, client, userdatta, message):
+        print("publishing to MQTTServerEcho")
+        #mqttObject.publish("test/MQTTServerEcho","ECHO-- "+str(message.payload.decode("utf-8")))
+        mqttObject.publish("test/MQTTServerEcho", message.payload)
+    
     def __takeReadings(self):
         humidity, temperature = self.dht.read()
         if humidity is not None and temperature is not None:
@@ -302,7 +324,10 @@ class AppWindow(QDialog):
         print ("Application closing. Cleaning up resources")
         self.pushreadingsTimer.stop()
         self.readingsTimer.stop()
-
+        
+        self.mqtt.disconnect()
+        self.mqtt.loopStop()
+        
         self.server.stop()
         #self.server.join()
         self.db.stopThread()
