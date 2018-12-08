@@ -187,8 +187,8 @@ class AppWindow(QDialog):
     
     def timerTickEvent(self):
         self.now += 1
-        humidity, temperature = self.updateTempHumUI()
-        if self.realTimePlotter.isPlotterRunning() is True:
+        humidity, temperature = self.dht.read()
+        if humidity is not None and temperature is not None and self.realTimePlotter.isPlotterRunning() is True:
             self.realTimePlotter.putData([humidity,temperature])
         
     def stopTimerEvent(self):
