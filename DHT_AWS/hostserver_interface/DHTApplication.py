@@ -22,6 +22,7 @@ from AWS_interface import AWSMQTTInterface
 
 sys.path.append('./../commonProtocol/')
 from MQTTWrapper import MQTTWrapper
+from WebsocketWrapper import WebsocketWrapper
 
 #Class abstraction over the DHT sensor Adafruit class
 class DHTUser():
@@ -106,6 +107,9 @@ class AppWindow(QDialog):
         self.protocolThread = threading.Thread(target=self.__startProtocolLoop)
         self.protocolThread.daemon = True
         self.protocolThread.start()
+        
+        self.ws = WebsocketWrapper()
+        self.ws.start()
         
         
     def __startProtocolLoop(self):
@@ -327,6 +331,8 @@ class AppWindow(QDialog):
         
         self.mqtt.disconnect()
         self.mqtt.loopStop()
+        
+        self.ws.stop()
         
         self.server.stop()
         #self.server.join()

@@ -21,6 +21,7 @@ import csv
 
 sys.path.append('./../../commonProtocol/')
 from MQTTWrapper import MQTTWrapper
+from websocket import create_connection
 
 
 class LoginWindow(QDialog):
@@ -90,6 +91,9 @@ class AppWindow(QDialog):
         #mqtt
         self.mqtt = MQTTWrapper("shreyagunj","iot.eclipse.org")
         self.mqtt.subscribe("test/MQTTServerEcho", self.__myEchoSubscribeCallback)
+        
+        self.wsclient = create_connection("ws://localhost:8111/ws")
+        
         #self.protocolThread = threading.Thread(target=self.__startProtocolLoop)
         #self.protocolThread.daemon = True
         #self.protocolThread.start()
@@ -114,6 +118,13 @@ class AppWindow(QDialog):
         #mqtt
         self.MQTT_timeStart = time.time()
         self.mqtt.publish("test/MQTTClient", self.testData)
+        
+        self.Websocket_timeStart = time.time()
+        self.wsclient.send(self.testData)
+        result =  self.wsclient.recv()
+        self.Websocket_timeEnd = time.time()
+        print ("WEBSOCKET -- Time Start:{0} Time End:{1} Diff:{2}".format(self.Websocket_timeStart, self.Websocket_timeEnd, str(self.Websocket_timeEnd-self.Websocket_timeStart)))
+        self.__setTableItemWebsocket(self.Websocket_timeStart, self.Websocket_timeEnd, self.Websocket_timeEnd-self.Websocket_timeStart)
         #websocket
         #coap
         
@@ -139,9 +150,9 @@ class AppWindow(QDialog):
         self.ui.comparisionTable.move(self.ui.comparisionTable.x()-1,self.ui.comparisionTable.y())
                 
     def __myEchoSubscribeCallback(self,mqttObject, client, userdata, message):
-        print ("Recvd Message:",str(message.payload.decode("utf-8")))
+        #print ("Recvd Message:",str(message.payload.decode("utf-8")))
         self.MQTT_timeEnd = time.time()
-        print ("Time Start:{0} Time End:{1} Diff:{2}".format(self.MQTT_timeStart, self.MQTT_timeEnd, str(self.MQTT_timeEnd-self.MQTT_timeStart)))
+        print ("MQTT -- Time Start:{0} Time End:{1} Diff:{2}".format(self.MQTT_timeStart, self.MQTT_timeEnd, str(self.MQTT_timeEnd-self.MQTT_timeStart)))
         self.__setTableItemMQTT(self.MQTT_timeStart, self.MQTT_timeEnd, (self.MQTT_timeEnd - self.MQTT_timeStart))
         
     def get_queue_data(self):
@@ -184,7 +195,7 @@ class AppWindow(QDialog):
                     #itemnum += 1
             #print(count)
             count = count + 1
-            print("count", count)
+            #print("count", count)
             
          #for priniting the values we use zip -Iterate over multiple lists in parallel
         for curr_t,avg_t,max_t,min_t,curr_h,avg_h,max_h,min_h,time_t in zip(self.curr_t_list,self.avg_t_list,self.max_t_list, self.min_t_list, self.curr_h_list, self.avg_h_list, self.max_h_list, self.min_h_list,self.time_list):      

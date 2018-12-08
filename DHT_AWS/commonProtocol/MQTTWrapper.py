@@ -34,8 +34,8 @@ class MQTTWrapper():
     def publish(self,topicName, message):
         if topicName is None:
             return False
-        print("publishing ",message, " to topic:",topicName)
-        self.client.publish(topicName,message)#publish
+        #print("publishing ",message, " to topic:",topicName)
+        self.client.publish(topicName,message)
         return True
         
     def disconnect(self):
