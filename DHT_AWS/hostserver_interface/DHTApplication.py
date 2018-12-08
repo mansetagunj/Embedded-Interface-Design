@@ -23,6 +23,7 @@ from AWS_interface import AWSMQTTInterface
 sys.path.append('./../commonProtocol/')
 from MQTTWrapper import MQTTWrapper
 from WebsocketWrapper import WebsocketWrapper
+from CoAPWrapper import CoAPWrapper
 
 #Class abstraction over the DHT sensor Adafruit class
 class DHTUser():
@@ -104,16 +105,20 @@ class AppWindow(QDialog):
         #mqtt
         self.mqtt = MQTTWrapper("gunjshreya","iot.eclipse.org")
         self.mqtt.subscribe("test/MQTTClient", self.__myMQTTSubCallback)
+        
+        self.wsServer = WebsocketWrapper()
+        self.wsServer.start()
+        
+        self.coapServer = CoAPWrapper()
+        
         self.protocolThread = threading.Thread(target=self.__startProtocolLoop)
         self.protocolThread.daemon = True
         self.protocolThread.start()
         
-        self.ws = WebsocketWrapper()
-        self.ws.start()
-        
         
     def __startProtocolLoop(self):
         self.mqtt.loopStart()
+        self.coapServer.start()
         
         
     def __myMQTTSubCallback(self, mqttObject, client, userdatta, message):
@@ -332,7 +337,9 @@ class AppWindow(QDialog):
         self.mqtt.disconnect()
         self.mqtt.loopStop()
         
-        self.ws.stop()
+        self.wsServer.stop()
+        
+        self.coapServer.stop()
         
         self.server.stop()
         #self.server.join()

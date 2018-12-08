@@ -22,6 +22,8 @@ import csv
 sys.path.append('./../../commonProtocol/')
 from MQTTWrapper import MQTTWrapper
 from websocket import create_connection
+import asyncio
+from aiocoap import *
 
 
 class LoginWindow(QDialog):
@@ -113,20 +115,34 @@ class AppWindow(QDialog):
                            }
         
         self.mqtt.loopStart()
+        
+    async def triggerCoapClient(self):
+
+        context = await Context.create_client_context()
+        request = Message(code=PUT, payload=self.testData.encode('UTF-8'), uri="coap://localhost/echo")
+
+        self.COAP_timeStart = time.time()
+        response = await context.request(request).response
+        self.COAP_timeEnd = time.time()
+        #print('COAP Echo Res %s\n%r'%(response.code, response.payload))
+        print ("COAP-- Time Start:{0} Time End:{1} Diff:{2}".format(self.COAP_timeStart, self.COAP_timeEnd, str(self.COAP_timeEnd-self.COAP_timeStart)))
+        self.__setTableItemCoAP(self.COAP_timeStart, self.COAP_timeEnd, self.COAP_timeEnd - self.COAP_timeStart)
+
     
     def startProtocolComparision(self):
         #mqtt
         self.MQTT_timeStart = time.time()
         self.mqtt.publish("test/MQTTClient", self.testData)
         
+        #websocket
         self.Websocket_timeStart = time.time()
         self.wsclient.send(self.testData)
         result =  self.wsclient.recv()
         self.Websocket_timeEnd = time.time()
         print ("WEBSOCKET -- Time Start:{0} Time End:{1} Diff:{2}".format(self.Websocket_timeStart, self.Websocket_timeEnd, str(self.Websocket_timeEnd-self.Websocket_timeStart)))
         self.__setTableItemWebsocket(self.Websocket_timeStart, self.Websocket_timeEnd, self.Websocket_timeEnd-self.Websocket_timeStart)
-        #websocket
         #coap
+        asyncio.get_event_loop().run_until_complete(self.triggerCoapClient())
         
     def __setTableItemMQTT(self, timestart, timeend, timediff):
         self.ui.comparisionTable.setItem(self.tableIndex['mqttTimeStart'][0],self.tableIndex['mqttTimeStart'][1], QTableWidgetItem(str(timestart)))
