@@ -80,6 +80,9 @@ class AppWindow(QDialog):
         self.curr_h_list=[]
         self.avg_h_list=[]
         self.time_list=[]
+        self.coap_list =[]
+        self.mqtt_list=[]
+        self.websocket_list=[]
         self.unit = "C"
         self.mul = 1
         self.add = 0
@@ -146,12 +149,14 @@ class AppWindow(QDialog):
         #print('COAP Echo Res %s\n%r'%(response.code, response.payload))
         print ("COAP-- Time Start:{0} Time End:{1} Diff:{2}".format(self.COAP_timeStart, self.COAP_timeEnd, str(self.COAP_timeEnd-self.COAP_timeStart)))
         self.__setTableItemCoAP(self.COAP_timeStart, self.COAP_timeEnd, self.COAP_timeEnd - self.COAP_timeStart)
-                
+        self.coap_list.append(self.COAP_timeEnd - self.COAP_timeStart)
+                        
     def __myEchoSubscribeCallback(self,mqttObject, client, userdata, message):
         #print ("Recvd Message:",str(message.payload.decode("utf-8")))
         self.MQTT_timeEnd = time.time()
         print ("MQTT -- Time Start:{0} Time End:{1} Diff:{2}".format(self.MQTT_timeStart, self.MQTT_timeEnd, str(self.MQTT_timeEnd-self.MQTT_timeStart)))
         self.__setTableItemMQTT(self.MQTT_timeStart, self.MQTT_timeEnd, (self.MQTT_timeEnd - self.MQTT_timeStart))
+        self.mqtt_list.append(self.MQTT_timeEnd - self.MQTT_timeStart)
         
     def startProtocolComparision(self):
         #mqtt
@@ -167,6 +172,7 @@ class AppWindow(QDialog):
         print ("WEBSOCKET -- Time Start:{0} Time End:{1} Diff:{2}".format(self.Websocket_timeStart, self.Websocket_timeEnd, str(self.Websocket_timeEnd-self.Websocket_timeStart)))
         self.__setTableItemWebsocket(self.Websocket_timeStart, self.Websocket_timeEnd, self.Websocket_timeEnd-self.Websocket_timeStart)
         #coap
+        self.websocket_list.append(self.Websocket_timeEnd-self.Websocket_timeStart)
         asyncio.get_event_loop().run_until_complete(self.triggerCoapClient())
         
     def get_queue_data(self):
@@ -256,8 +262,21 @@ class AppWindow(QDialog):
         plt.ylabel('Humidity %' )
         plt.xlabel('Number of Items Retrieved')
         
+        self.comparison_graph()
         plt.show()
         
+    def comparison_graph(self):
+        h = plt.figure(3)
+        xRange = len(self.coap_time_list) + 1
+        plt.xticks(range(1,xRange))
+        plt.plot(range(1,xRange), self.coap_list, 'b-', label='CoAP')
+        plt.plot(range(1,xRange), self.mqtt_list, 'r-', label='MQTT')
+        plt.plot(range(1,xRange), self.websocket_list, 'y-', label='WebSocket')
+        plt.legend(loc='best')
+        plt.title('Comparison of Protocols')
+        plt.ylabel('Protocol transfer time')
+        plt.xlabel('Number of messages')
+        #plt.show()
         
     def convert(self):
         print("convert clicked filling units")
