@@ -97,7 +97,7 @@ class AppWindow(QDialog):
         self.mqtt = MQTTWrapper("shreyagunj","iot.eclipse.org")
         self.mqtt.subscribe("test/MQTTServerEcho", self.__myEchoSubscribeCallback)
         
-        self.wsclient = create_connection("ws://localhost:8111/ws")
+        self.wsclient = create_connection("ws://10.201.26.245:8111/ws")
         
         #self.protocolThread = threading.Thread(target=self.__startProtocolLoop)
         #self.protocolThread.daemon = True
@@ -141,7 +141,7 @@ class AppWindow(QDialog):
     async def triggerCoapClient(self):
 
         context = await Context.create_client_context()
-        request = Message(code=PUT, payload=self.testData.encode('UTF-8'), uri="coap://localhost/echo")
+        request = Message(code=PUT, payload=self.testData.encode('UTF-8'), uri="coap://10.201.26.245/echo")
 
         self.COAP_timeStart = time.time()
         response = await context.request(request).response
@@ -267,15 +267,15 @@ class AppWindow(QDialog):
         
     def comparison_graph(self):
         h = plt.figure(3)
-        xRange = len(self.coap_time_list) + 1
-        plt.xticks(range(1,xRange))
-        plt.plot(range(1,xRange), self.coap_list, 'b-', label='CoAP')
-        plt.plot(range(1,xRange), self.mqtt_list, 'r-', label='MQTT')
-        plt.plot(range(1,xRange), self.websocket_list, 'y-', label='WebSocket')
-        plt.legend(loc='best')
-        plt.title('Comparison of Protocols')
-        plt.ylabel('Protocol transfer time')
-        plt.xlabel('Number of messages')
+        objects = ('MQTT', 'Websocket', 'CoAP')
+        y_pos = range(1,len(objects)+1)
+        performance = [self.MQTT_timeEnd- self.MQTT_timeStart, self.Websocket_timeEnd- self.Websocket_timeStart, self.COAP_timeEnd - self.COAP_timeStart]
+         
+        plt.bar(y_pos, performance, align='center', alpha=0.5)
+        plt.xticks(y_pos, objects)
+        plt.ylabel('Time in S')
+        plt.title('Protocol Comparision')
+                    
         #plt.show()
         
     def convert(self):
